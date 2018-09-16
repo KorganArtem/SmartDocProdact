@@ -27,7 +27,7 @@ public class FileLister {
             }
         }
     }
-    private File[] getListInFolder(File folder){
+    public File[] getListInFolder(File folder){
         File[] fileList = folder.listFiles();
         return fileList;
     }

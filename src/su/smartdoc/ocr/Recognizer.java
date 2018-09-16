@@ -29,7 +29,11 @@ public class Recognizer {
         instance.setDatapath("F:\\libs\\Tess4J-3.4.2-src\\Tess4J\\tessdata");
         instance.setLanguage("rus");
     }
-    
+    public String recBloc(BufferedImage imageBloc) throws TesseractException{
+       String result = instance.doOCR(imageBloc);
+        //System.out.println(result +"\n\n");
+        return result;
+    }
     public void doPdfFromJpg(String filePath, String fileId, String baseDir){
         System.out.println(filePath+" --> "+baseDir+"/pdf/"+fileId);
         File imgFl = new File(filePath);

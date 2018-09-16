@@ -8,6 +8,7 @@ package su.smartdoc.firstpoint;
 import java.io.IOException;
 import java.sql.SQLException;
 import net.sourceforge.tess4j.TesseractException;
+import su.smartdoc.imgProc.ImgCompres;
 import su.smartdoc.objectFinder.*;
 
 /**
@@ -20,10 +21,17 @@ public class SmartDocProdact {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException, TesseractException, SQLException {
+        ObjectFounder md = new ObjectFounder();
+        md.work();
+        GetRequisites gr = new GetRequisites();
+        gr.getReq();
+
+        //ImgCompres ip = new ImgCompres();
+        //ip.allFileResize();
         // TODO code application logic here
         
-        ObjectFounder md = new ObjectFounder();
-        md.work(); 
+         
+           
     }
     
 }

@@ -130,7 +130,7 @@ public class ObjectFounder {
             File flDst = new File(this.dstPath+"\\"+fileName);
             Files.copy(flSrs.toPath(), flDst.toPath());
             Files.delete(flSrs.toPath());
-            rc.writeImageData(dstPath+"\\"+fileName, barCode);
+            rc.writeImageData(dstRoot+barCode+"\\"+fileName, barCode);
             moved = true;
         }
         else{
