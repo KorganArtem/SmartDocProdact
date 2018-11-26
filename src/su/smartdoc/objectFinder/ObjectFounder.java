@@ -34,6 +34,7 @@ public class ObjectFounder {
     boolean moved = false;
     String dstPath = null;
     String dstRoot = "C:/smartdoc/SORTED/";
+    String currentBurCode = null;
     WorkSQL rc = new WorkSQL();
     public void work() throws IOException, TesseractException, SQLException{
         System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
@@ -83,6 +84,7 @@ public class ObjectFounder {
                 File flDst = new File(this.dstPath+"\\"+fileName);
                 Files.copy(flSrs.toPath(), flDst.toPath());
                 Files.delete(flSrs.toPath());
+                rc.writeImg(fileName, this.currentBurCode);
             }
             return;
         }
@@ -95,6 +97,7 @@ public class ObjectFounder {
                 File flDst = new File(this.dstPath+"\\"+fileName);
                 Files.copy(flSrs.toPath(), flDst.toPath());
                 Files.delete(flSrs.toPath());
+                rc.writeImg(fileName, this.currentBurCode);
             }
             return;
         }
@@ -118,19 +121,23 @@ public class ObjectFounder {
             if(moved==true){
                 File flSrs = new File(srcPath+"\\"+fileName);
                 File flDst = new File(this.dstPath+"\\"+fileName);
+                
                 System.out.println(flSrs.getAbsolutePath() + " --> " + flDst.getAbsolutePath());
                 Files.copy(flSrs.toPath(), flDst.toPath());
+                rc.writeImg(fileName, this.currentBurCode);
                 Files.delete(flSrs.toPath());
             }
             return;
         }
+        this.currentBurCode = barCode;
         if(createFolder(barCode)){
             this.dstPath=dstRoot+barCode;
             File flSrs = new File(srcPath+"\\"+fileName);
             File flDst = new File(this.dstPath+"\\"+fileName);
             Files.copy(flSrs.toPath(), flDst.toPath());
             Files.delete(flSrs.toPath());
-            rc.writeImageData(dstRoot+barCode+"\\"+fileName, barCode);
+            rc.writeImageData(dstRoot+barCode+"\\"+fileName, barCode, dstRoot+barCode+"\\");
+            rc.writeImg(fileName, this.currentBurCode);
             moved = true;
         }
         else{

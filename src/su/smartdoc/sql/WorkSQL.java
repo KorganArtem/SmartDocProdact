@@ -38,10 +38,11 @@ public class WorkSQL {
             System.out.println("Mysql ERROR: "+ex.getMessage());
         }
     }
-    public void writeImageData(String path, String barCode){
+    public void writeImageData(String path, String barCode, String directoryPath){
         try{
             path=path.replaceAll("\\\\","/");
-            String insertQuery = "INSERT INTO `markedImage` (`barCode`, `path`) VALUES ('"+barCode+"', '"+path+"')";
+            directoryPath=directoryPath.replaceAll("\\\\","/");
+            String insertQuery = "INSERT INTO `markedImage` (`barCode`, `path`, `directoryPath`) VALUES ('"+barCode+"', '"+path+"', '"+directoryPath+"')";
             PreparedStatement  st = con.prepareStatement(insertQuery);
             st.execute();
         }
@@ -56,6 +57,22 @@ public class WorkSQL {
         while(rs.next()){
             //System.out.println(rs.getString("ImageId") + "  " +rs.getString("path"));
             list.put(rs.getString("ImageId"), rs.getString("path"));
+        }
+        return list;
+    }
+    public Map getAllPageList() throws SQLException{
+        Map<String, String> list = new HashMap<String, String>();
+        try{
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM `imgList` "
+                    + "INNER JOIN `markedImage` "
+                    + "ON `markedImage`.`barCode`=`imgList`.`causeNum`");
+            while(rs.next()){
+                list.put(rs.getString("idimgList"), rs.getString("directoryPath")+rs.getString("imgName"));
+            }
+        }
+        catch(SQLException ex){
+            System.out.println(ex.getMessage());
         }
         return list;
     }
@@ -75,5 +92,9 @@ public class WorkSQL {
     public void updateState(String id, int state) throws SQLException {
         Statement st = con.createStatement();
         st.execute("UPDATE `markedImage` SET `proccesedImafe`='"+state+"' WHERE ImageId='"+ id +"'");
+    }
+    public void writeImg(String imgName, String causeNum) throws SQLException{
+        Statement st = con.createStatement();
+        st.execute("INSERT `imgList` SET `imgName`='"+imgName+"',  causeNum='"+ causeNum +"'");
     }
 }

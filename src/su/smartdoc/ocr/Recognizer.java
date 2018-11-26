@@ -26,7 +26,7 @@ public class Recognizer {
     Tesseract instance = new Tesseract();
     public Recognizer(){
         list.add(RenderedFormat.PDF);
-        instance.setDatapath("F:\\libs\\Tess4J-3.4.2-src\\Tess4J\\tessdata");
+        instance.setDatapath("C:\\tessdata");
         instance.setLanguage("rus");
     }
     public String recBloc(BufferedImage imageBloc) throws TesseractException{

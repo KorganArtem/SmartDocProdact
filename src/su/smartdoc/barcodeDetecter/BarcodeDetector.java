@@ -29,7 +29,7 @@ import org.opencv.imgcodecs.Imgcodecs;
  * @author korgan
  */
 public class BarcodeDetector {
-    public String readCode(Mat findedBarcode) throws IOException{
+    public String readCode(Mat findedBarcode){
         try{
             Result result;
             BufferedImage barCodeBufferedImage = matToBuff(findedBarcode);
