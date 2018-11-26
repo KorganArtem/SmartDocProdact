@@ -66,7 +66,7 @@ public class WorkSQL {
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM `imgList` "
                     + "INNER JOIN `markedImage` "
-                    + "ON `markedImage`.`barCode`=`imgList`.`causeNum`");
+                    + "ON `markedImage`.`barCode`=`imgList`.`causeNum` LIMIT 20");
             while(rs.next()){
                 list.put(rs.getString("idimgList"), rs.getString("directoryPath")+rs.getString("imgName"));
             }

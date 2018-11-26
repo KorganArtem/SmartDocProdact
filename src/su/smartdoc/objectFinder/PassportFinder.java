@@ -50,43 +50,54 @@ public class PassportFinder {
         }
     }
     public void barCodeSearcher(String fileName, String dstPath) throws IOException, TesseractException, SQLException {
-        Mat image = Imgcodecs.imread(fileName);
-        if(image.empty()){
+        
+        System.out.println("C:\\smartdoc\\FIRST"+"\\"+fileName.split("/")[fileName.split("/").length-1]);
+        
+        Mat imageOrig = Imgcodecs.imread(fileName);
+        
+        Imgcodecs.imwrite("C:\\smartdoc\\FIRST"+"\\ORIG_"+fileName.split("/")[fileName.split("/").length-1], imageOrig);
+        if(imageOrig.empty()){
             System.err.println("Файл не загружен");
             return;
         }
+        Mat image = imageOrig.clone();
         Imgproc.cvtColor(image, image, Imgproc.COLOR_RGB2GRAY);
         int ddepth  = CvType.CV_32F;
+        
         Mat gradX = new Mat();
         Mat gradY = new Mat();
         Imgproc.Sobel(image, gradX, ddepth, 1, 0);
         Imgproc.Sobel(image, gradY, ddepth, 0, 1);
+        
         Mat gradient = new Mat();
         Core.subtract(gradX, gradY, gradient);
         Core.convertScaleAbs(gradient, gradient);
-        Imgproc.blur(gradient, gradient, new Size(2, 5));
-        Imgproc.threshold(gradient, gradient, 225, 255, Imgproc.THRESH_BINARY);
-        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(21, 7));
+        
+        Imgproc.blur(gradient, gradient, new Size(8, 12));
+        
+        Imgproc.threshold(gradient, gradient, 50, 250, Imgproc.THRESH_BINARY);
+        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(10, 3));
         Imgproc.morphologyEx(gradient, gradient, Imgproc.MORPH_CLOSE, kernel);
         Point anchor = new Point();
-        Imgproc.erode(gradient, gradient, kernel, anchor, 5);
+        Imgproc.erode(gradient, gradient, kernel, anchor, 1);
         Imgproc.dilate(gradient, gradient, kernel);
         List<MatOfPoint> contours = new ArrayList<>();
-        Imgproc.findContours(gradient, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+        Imgcodecs.imwrite("C:\\smartdoc\\FIRST"+"\\gr_"+fileName.split("/")[fileName.split("/").length-1], gradient);
+        Imgproc.findContours(gradient, contours, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);  //RETR_EXTERNAL
         int bgestContour = getIdBigestCountour(contours);
+        if(bgestContour==-2)
+            return;
         Scalar color=new Scalar(255, 0, 0);
-        Imgproc.drawContours(image, contours, -1, color, ddepth);
+        Imgproc.drawContours(imageOrig, contours, bgestContour, color, 20);
         
         
-        System.out.println("C:\\smartdoc\\FIRST"+"\\"+fileName.split("/")[fileName.split("/").length-1]);
-        
-        
-        Imgcodecs.imwrite("C:\\smartdoc\\FIRST"+"\\"+fileName.split("/")[fileName.split("/").length-1], gradient);
+        Imgcodecs.imwrite("C:\\smartdoc\\FIRST"+"\\"+fileName.split("/")[fileName.split("/").length-1], imageOrig);
+        //Imgcodecs.imwrite("C:\\smartdoc\\FIRST"+"\\"+fileName.split("/")[fileName.split("/").length-1], imageOrig);
         Point center = new Point();
         float[] radius = new float[1];
-        Imgproc.minEnclosingCircle(new MatOfPoint2f(contours.get(bgestContour).toArray()), center, radius);
+        //Imgproc.minEnclosingCircle(new MatOfPoint2f(contours.get(bgestContour).toArray()), center, radius);
        
-        Imgcodecs.imwrite(dstPath+"/"+fileName.split("/")[fileName.split("/").length-1], image);
+        //Imgcodecs.imwrite(dstPath+"/"+fileName.split("/")[fileName.split("/").length-1], imageOrig);
         
     }
     public int getIdBigestCountour(List<MatOfPoint> contours){
@@ -98,6 +109,9 @@ public class PassportFinder {
                 id = contourId;
             }
         }
+        if(maxSize<400)
+            return -2;
+        System.out.println("Size: "+id);
         return id;
     }
 
