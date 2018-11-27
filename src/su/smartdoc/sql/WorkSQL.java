@@ -66,7 +66,7 @@ public class WorkSQL {
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM `imgList` "
                     + "INNER JOIN `markedImage` "
-                    + "ON `markedImage`.`barCode`=`imgList`.`causeNum` LIMIT 20");
+                    + "ON `markedImage`.`barCode`=`imgList`.`causeNum` WHERE `imgType`=0 LIMIT 100");
             while(rs.next()){
                 list.put(rs.getString("idimgList"), rs.getString("directoryPath")+rs.getString("imgName"));
             }
@@ -93,8 +93,8 @@ public class WorkSQL {
         Statement st = con.createStatement();
         st.execute("UPDATE `markedImage` SET `proccesedImafe`='"+state+"' WHERE ImageId='"+ id +"'");
     }
-    public void writeImg(String imgName, String causeNum) throws SQLException{
+    public void writeImg(String imgName, String causeNum, int imgType) throws SQLException{
         Statement st = con.createStatement();
-        st.execute("INSERT `imgList` SET `imgName`='"+imgName+"',  causeNum='"+ causeNum +"'");
+        st.execute("INSERT `imgList` SET `imgName`='"+imgName+"', `imgType`='"+imgType+"', causeNum='"+ causeNum +"'");
     }
 }

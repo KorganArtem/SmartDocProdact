@@ -84,7 +84,7 @@ public class ObjectFounder {
                 File flDst = new File(this.dstPath+"\\"+fileName);
                 Files.copy(flSrs.toPath(), flDst.toPath());
                 Files.delete(flSrs.toPath());
-                rc.writeImg(fileName, this.currentBurCode);
+                rc.writeImg(fileName, this.currentBurCode, 0);
             }
             return;
         }
@@ -97,12 +97,12 @@ public class ObjectFounder {
                 File flDst = new File(this.dstPath+"\\"+fileName);
                 Files.copy(flSrs.toPath(), flDst.toPath());
                 Files.delete(flSrs.toPath());
-                rc.writeImg(fileName, this.currentBurCode);
+                rc.writeImg(fileName, this.currentBurCode, 0);
             }
             return;
         }
         
-        Imgcodecs.imwrite("C:\\smartdoc\\FIRST"+"\\"+fileName, gradient);
+        //Imgcodecs.imwrite("C:\\smartdoc\\FIRST"+"\\"+fileName, gradient);
         Point center = new Point();
         float[] radius = new float[1];
         Imgproc.minEnclosingCircle(new MatOfPoint2f(contours.get(bgestContour).toArray()), center, radius);
@@ -124,7 +124,7 @@ public class ObjectFounder {
                 
                 System.out.println(flSrs.getAbsolutePath() + " --> " + flDst.getAbsolutePath());
                 Files.copy(flSrs.toPath(), flDst.toPath());
-                rc.writeImg(fileName, this.currentBurCode);
+                rc.writeImg(fileName, this.currentBurCode, 0);
                 Files.delete(flSrs.toPath());
             }
             return;
@@ -137,7 +137,7 @@ public class ObjectFounder {
             Files.copy(flSrs.toPath(), flDst.toPath());
             Files.delete(flSrs.toPath());
             rc.writeImageData(dstRoot+barCode+"\\"+fileName, barCode, dstRoot+barCode+"\\");
-            rc.writeImg(fileName, this.currentBurCode);
+            rc.writeImg(fileName, this.currentBurCode, 1);
             moved = true;
         }
         else{
