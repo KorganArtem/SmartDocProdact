@@ -44,14 +44,12 @@ public class PassportFinder {
         Set keys = list.keySet();
         for(Object key : keys){
             
-            System.out.println(key.toString()+"  -->  " +list.get(key.toString()).toString());
+            //System.out.println(key.toString()+"  -->  " +list.get(key.toString()).toString());
             //System.out.println(lowEntry.getAbsolutePath());
             barCodeSearcher(list.get(key.toString()).toString(), "C:\\smartdoc\\CROPED");
         }
     }
     public void barCodeSearcher(String fileName, String dstPath) throws IOException, TesseractException, SQLException {
-        
-        System.out.println("C:\\smartdoc\\FIRST"+"\\"+fileName.split("/")[fileName.split("/").length-1]);
         
         Mat imageOrig = Imgcodecs.imread(fileName);
         
@@ -86,12 +84,18 @@ public class PassportFinder {
         ///////////////////////////
         //Imgcodecs.imwrite("C:\\smartdoc\\FIRST"+"\\gr_"+fileName.split("/")[fileName.split("/").length-1], gradient);
         Imgproc.findContours(gradient, contours, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);  //RETR_EXTERNAL
-        int bgestContour = getIdBigestCountour(contours);
-        if(bgestContour==-2)
+        int bgestContour = getIdBigestCountour(contours, imageOrig.height()*imageOrig.width());
+        if(bgestContour==-2){
+            image.release();
+            gradX.release();
+            gradY.release();
+            gradient.release();
+            imageOrig.release();
             return;
+        }
         Scalar color=new Scalar(255, 0, 0);
         Imgproc.drawContours(imageOrig, contours, bgestContour, color, 20);
-        
+        System.out.println("C:\\smartdoc\\FIRST"+"\\"+fileName.split("/")[fileName.split("/").length-1]);
         
         Imgcodecs.imwrite("C:\\smartdoc\\FIRST"+"\\"+fileName.split("/")[fileName.split("/").length-1], imageOrig);
         //Imgcodecs.imwrite("C:\\smartdoc\\FIRST"+"\\"+fileName.split("/")[fileName.split("/").length-1], imageOrig);
@@ -102,7 +106,7 @@ public class PassportFinder {
         //Imgcodecs.imwrite(dstPath+"/"+fileName.split("/")[fileName.split("/").length-1], imageOrig);
         
     }
-    public int getIdBigestCountour(List<MatOfPoint> contours){
+    public int getIdBigestCountour(List<MatOfPoint> contours, int matSize){
         double maxSize = 0;
         int id = 0;
         for(int contourId = 0; contourId<contours.size(); contourId++){
@@ -111,9 +115,12 @@ public class PassportFinder {
                 id = contourId;
             }
         }
-        if(4000000.00>maxSize && maxSize<1900000.00)
+        double soot = matSize/maxSize;
+        /*if(4000000.00>maxSize && maxSize<1900000.00)
+            return -2;*/
+        if(soot<2.5 || soot>2.9)
             return -2;
-        System.out.println("Size: "+maxSize);
+        System.err.println("Size: "+maxSize+"   "+matSize+"   "+soot);
         return id;
     }
 

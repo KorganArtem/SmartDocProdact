@@ -24,7 +24,7 @@ public class SmartDocProdact {
         ObjectFounder md = new ObjectFounder();
         md.work();
         GetRequisites gr = new GetRequisites();
-        gr.getReq();
+        //gr.getReq();
         PassportFinder pf = new PassportFinder();
         pf.starter();
         //ImgCompres ip = new ImgCompres();
