@@ -21,12 +21,12 @@ public class SmartDocProdact {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException, TesseractException, SQLException {
-        ObjectFounder md = new ObjectFounder();
-        md.work();
+//        ObjectFounder md = new ObjectFounder();
+//        md.work();
         GetRequisites gr = new GetRequisites();
-        //gr.getReq();
-        PassportFinder pf = new PassportFinder();
-        pf.starter();
+        gr.getReq();
+        //PassportFinder pf = new PassportFinder();
+        //pf.starter();
         //ImgCompres ip = new ImgCompres();
         //ip.allFileResize();
         // TODO code application logic here

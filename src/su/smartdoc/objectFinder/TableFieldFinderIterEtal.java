@@ -35,7 +35,7 @@ import su.smartdoc.ocr.Recognizer;
  *
  * @author korgan
  */
-public class TableFieldFinderIter {
+public class TableFieldFinderIterEtal {
     boolean moved = false;
     String dstPath = null;
     String dstRoot = "C:\\smartdoc\\SORTED\\";

@@ -53,7 +53,7 @@ public class WorkSQL {
     public Map getStartPageList() throws SQLException{
         Map<String, String> list = new HashMap<String, String>();
         Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM `markedImage`");
+        ResultSet rs = st.executeQuery("SELECT * FROM `markedImage` WHERE proccesedImafe=0");
         while(rs.next()){
             //System.out.println(rs.getString("ImageId") + "  " +rs.getString("path"));
             list.put(rs.getString("ImageId"), rs.getString("path"));

@@ -29,7 +29,7 @@ import su.smartdoc.sql.WorkSQL;
  *
  * @author korgan
  */
-public class ObjectFounder {
+public class ObjectFounder1 {
 
     boolean moved = false;
     String dstPath = null;
@@ -42,12 +42,7 @@ public class ObjectFounder {
         rc.conInit();
         for(File lowEntry : getListInFolder(new File(rootDirectiryPath))){
             //System.out.println(lowEntry.getAbsolutePath());
-            try{
-                barCodeSearcher(rootDirectiryPath, lowEntry.getName(), "C:\\smartdoc\\CROPED");
-            }
-            catch(Exception ex){
-                System.out.println(ex.getMessage());
-            }
+            barCodeSearcher(rootDirectiryPath, lowEntry.getName(), "C:\\smartdoc\\CROPED");
          }
     }
     private File[] getListInFolder(File folder){
@@ -61,12 +56,11 @@ public class ObjectFounder {
             System.err.println("Файл не загружен");
             return;
         }
-        Double width = imageOrig.cols()/2.5;
-        int startPoint = imageOrig.cols() - width.intValue();
-        //System.out.println(imageOrig.cols()+"  "+width);
-        Rect rectCrop = new Rect(startPoint, 0, width.intValue(), imageOrig.rows()/5);
+        Double width = imageOrig.cols()/2.2;
+        System.out.println(imageOrig.cols()+"  "+width);
+        Rect rectCrop = new Rect(imageOrig.cols()/2, 0, width.intValue(), imageOrig.rows()/5);
         Mat image = new Mat(imageOrig, rectCrop);
-        //.imwrite("C:\\smartdoc\\FIRST"+"\\"+fileName, image);
+        
         Imgproc.cvtColor(image, image, Imgproc.COLOR_RGB2GRAY);
         int ddepth  = CvType.CV_32F;
         Mat gradX = new Mat();
@@ -109,23 +103,21 @@ public class ObjectFounder {
             return;
         }
         
-        Imgcodecs.imwrite("C:\\smartdoc\\FIRST"+"\\"+fileName, gradient);
+        //Imgcodecs.imwrite("C:\\smartdoc\\FIRST"+"\\"+fileName, gradient);
         Point center = new Point();
         float[] radius = new float[1];
         Imgproc.minEnclosingCircle(new MatOfPoint2f(contours.get(bgestContour).toArray()), center, radius);
        
-        //int point = (imageOrig.width()/21 + imageOri/21 + imageOrig.heightg.height()/29)/2;
-        int point = (imageOrig.width()/21)/2;
-        Point leftCorner = new Point((startPoint+center.x-point*2.6), (center.y-point*1.4) );
-        Point rightCorner = new Point((startPoint+center.x+point*3.7), (center.y+point*1.7) );
+        int point = (imageOrig.width()/21 + imageOrig.height()/29)/2;
+        Point leftCorner = new Point((center.x-point*2.6), (center.y-point*1.4) );
+        Point rightCorner = new Point((center.x+point*3.7), (center.y+point*1.7) );
         System.out.println(fileName + " \t " + sizeArea.intValue()+"  Center: "+center+ " Point size: "+point+"  LeftCorner: "+leftCorner+"  RightCorner: "+rightCorner);
         Imgproc.rectangle(imageOrig, leftCorner, rightCorner, new Scalar(255,0,0), 3);
         
         Rect roiRect = getRectBarCode(leftCorner, rightCorner);
-        Imgcodecs.imwrite(dstPath+"/"+fileName, imageOrig.submat(roiRect)); //
+        Imgcodecs.imwrite(dstPath+"/"+fileName, imageOrig.submat(roiRect));
         BarcodeDetector bcd = new BarcodeDetector();
         String barCode = bcd.readCode(imageOrig.submat(roiRect));
-        System.out.println(barCode);
         if(barCode == null){
             if(moved==true){
                 File flSrs = new File(srcPath+"\\"+fileName);

@@ -118,7 +118,7 @@ public class PassportFinder {
         double soot = matSize/maxSize;
         /*if(4000000.00>maxSize && maxSize<1900000.00)
             return -2;*/
-        if(soot<2.5 || soot>2.9)
+        if(soot<2.5 || soot>3.0)
             return -2;
         System.err.println("Size: "+maxSize+"   "+matSize+"   "+soot);
         return id;
